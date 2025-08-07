@@ -5,10 +5,14 @@ import os
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
+from lightning import LightningDataModule
+from torch.utils.data import DataLoader, random_split
 
-class GarbageClsDataset(Dataset):
+from utils import pad_to_square
+
+class WasteDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None):
-        self.img_labels = pd.read_csv(annotations_file, sep=',', header=None)
+        self.img_labels = pd.read_csv(annotations_file, sep=' ', header=None)
         self.img_dir = img_dir
         self.transform = transform
         self.classes = ['glass', 'paper', 'cardboard', 'plastic', 'metal', 'trash']
@@ -27,3 +31,57 @@ class GarbageClsDataset(Dataset):
             image = self.transform(image)
             
         return image, label
+    
+class WasteDatasetModule(LightningDataModule):
+    def __init__(self, dataset_dir, batch_size=32):
+        super().__init__()
+        self.img_dir = dataset_dir
+        self.batch_size = batch_size
+        
+        transform = transforms.Compose([
+            pad_to_square, 
+            transforms.Resize((224, 224)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            transforms.RandomRotation(degrees=(0, 180)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
+        ])
+        
+        self.train_transform = transform
+        self.val_transform = transform
+        self.test_transform = transform
+        
+    
+    def setup(self, stage):
+        if stage == 'fit':
+            self.train_dataset = WasteDataset(
+                os.path.join(self.img_dir,'train.csv'),
+                os.path.join(self.img_dir, 'imgs'),
+                self.train_transform
+            )
+            
+            self.val_dataset = WasteDataset(
+                os.path.join(self.img_dir,'val.csv'),
+                os.path.join(self.img_dir, 'imgs'),
+                self.val_transform
+            )
+            
+        if stage == 'test':
+            self.test_dataset = WasteDataset(
+                os.path.join(self.img_dir,'test.csv'),
+                os.path.join(self.img_dir, 'imgs'),
+                self.test_transform
+            )
+        
+    def train_dataloader(self):
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False)
+    
+    def val_dataloader(self):
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False)
+    
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False)
+    
+    def predict_dataloader(self):
+        return self.test_dataloader()
