@@ -1,6 +1,6 @@
 import torch
 import torchvision
-from torchvision.models import mobilenet_v3_small
+from torchvision.models import mobilenet_v3_small, mobilenet_v3_large
 from lightning import LightningModule
 from torch import nn
 
@@ -14,15 +14,16 @@ class WasteClassifier(LightningModule):
         self.num_classes = num_classes
         
         self.save_hyperparameters()
-        self.model = mobilenet_v3_small(weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT)
+        #self.model = mobilenet_v3_small(weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT)
+        self.model = mobilenet_v3_large(weights = torchvision.models.MobileNet_V3_Large_Weights.DEFAULT)
         in_features = self.model.classifier[3].in_features
-        self.model.classifier[3] = nn.Linear(in_features, 6)
+        self.model.classifier[3] = nn.Linear(in_features, num_classes)
         
         self.criterion = nn.CrossEntropyLoss()
         
         metrics = MetricCollection([
-            MulticlassAccuracy(num_classes), MulticlassPrecision(num_classes), 
-            MulticlassRecall(num_classes), MulticlassF1Score(num_classes)
+            MulticlassAccuracy(num_classes), MulticlassPrecision(num_classes, average='weighted'), 
+            MulticlassRecall(num_classes, average='weighted'), MulticlassF1Score(num_classes, average='weighted')
         ])
         
         self.train_metrics = metrics.clone(prefix='train_')

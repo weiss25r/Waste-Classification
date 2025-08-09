@@ -24,7 +24,7 @@ class WasteClassificationPipeline():
             verbose=True
         )
         
-        early_stop = EarlyStopping(monitor='val_loss', patience=3)
+        early_stop = EarlyStopping(monitor='val_loss', patience=5)
         callbacks = [checkpoint, early_stop]
 
         logger = TensorBoardLogger(
