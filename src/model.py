@@ -7,15 +7,22 @@ from torch import nn
 from torchmetrics import MetricCollection
 from torchmetrics.classification import MulticlassAccuracy, MulticlassPrecision, MulticlassRecall, MulticlassF1Score
 
-class WasteClassifier(LightningModule):
+class WasteClassifierModule(LightningModule):
     
-    def __init__(self, lr=0.001, num_classes=6):
+    def __init__(self, lr=0.001, model_size: str = 'large', num_classes=6):
         super().__init__()
         self.num_classes = num_classes
         
         self.save_hyperparameters()
         #self.model = mobilenet_v3_small(weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT)
-        self.model = mobilenet_v3_large(weights = torchvision.models.MobileNet_V3_Large_Weights.DEFAULT)
+        
+        if model_size == 'large':
+            self.model = mobilenet_v3_large(weights = torchvision.models.MobileNet_V3_Large_Weights.DEFAULT)
+        elif model_size == 'small':
+            self.model = mobilenet_v3_small(weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT)
+        else:
+            raise ValueError(f"Please choose the model size between large and small.")
+        
         in_features = self.model.classifier[3].in_features
         self.model.classifier[3] = nn.Linear(in_features, num_classes)
         

@@ -33,20 +33,12 @@ class WasteDataset(Dataset):
         return image, label
     
 class WasteDatasetModule(LightningDataModule):
-    def __init__(self, dataset_dir, batch_size=32):
+    def __init__(self, dataset_dir, batch_size=32, num_workers=0, transform=None):
         super().__init__()
         self.img_dir = dataset_dir
         self.batch_size = batch_size
         
-        transform = transforms.Compose([
-            pad_to_square, 
-            transforms.Resize((224, 224)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            transforms.RandomRotation(degrees=(0, 180)),
-            transforms.ToTensor(),
-            transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
-        ])
+        self.num_workers = num_workers
         
         self.train_transform = transform
         self.val_transform = transform
@@ -75,13 +67,14 @@ class WasteDatasetModule(LightningDataModule):
             )
         
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers, persistent_workers=True)
     
     def val_dataloader(self):
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers, persistent_workers=True)
     
     def test_dataloader(self):
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False)
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers, persistent_workers=True)
     
     def predict_dataloader(self):
+        #TODO: implement
         return self.test_dataloader()
