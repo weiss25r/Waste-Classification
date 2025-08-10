@@ -18,7 +18,7 @@ class WasteClassifier():
                 
             self.model = WasteClassifierModule(config['lr'], config['model_size'], NUM_CLASSES)
             
-            transform = transforms.Compose([
+            train_transform = transforms.Compose([
                 pad_to_square, 
                 transforms.Resize((224, 224)),
                 transforms.RandomHorizontalFlip(p = config['horizontal_flip']),
@@ -29,7 +29,18 @@ class WasteClassifier():
                 transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
             ])
             
-            self.data_module = WasteDatasetModule(config['dataset_path'], config['batch_size'], config['num_workers'], transform)
+            val_test_transform = transforms.Compose([
+                pad_to_square, 
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
+            ])
+            
+            self.data_module.setup(stage='fit')
+            self.data_module.setup(stage='test')
+            self.data_module.setup(stage='predict')
+            
+            self.data_module = WasteDatasetModule(config['dataset_path'], config['batch_size'], config['num_workers'], train_transform, val_test_transform)
             
             checkpoint = ModelCheckpoint(
                 monitor='val_loss',

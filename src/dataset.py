@@ -33,16 +33,15 @@ class WasteDataset(Dataset):
         return image, label
     
 class WasteDatasetModule(LightningDataModule):
-    def __init__(self, dataset_dir, batch_size=32, num_workers=0, transform=None):
+    def __init__(self, dataset_dir, batch_size=32, num_workers=0, train_transform=None, val_test_transform=None):
         super().__init__()
         self.img_dir = dataset_dir
         self.batch_size = batch_size
         
         self.num_workers = num_workers
         
-        self.train_transform = transform
-        self.val_transform = transform
-        self.test_transform = transform
+        self.train_transform = train_transform
+        self.val_test_transform = val_test_transform
     
     def setup(self, stage):
         if stage == 'fit':
@@ -55,14 +54,14 @@ class WasteDatasetModule(LightningDataModule):
             self.val_dataset = WasteDataset(
                 os.path.join(self.img_dir,'val.csv'),
                 os.path.join(self.img_dir, 'imgs'),
-                self.val_transform
+                self.val_test_transform
             )
             
         if stage == 'test':
             self.test_dataset = WasteDataset(
                 os.path.join(self.img_dir,'test.csv'),
                 os.path.join(self.img_dir, 'imgs'),
-                self.test_transform
+                self.val_test_transform
             )
         
     def train_dataloader(self):
