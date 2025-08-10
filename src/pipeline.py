@@ -6,7 +6,7 @@ from model import *
 
 from lightning import Trainer
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
-from lightning.pytorch.loggers import TensorBoardLogger
+from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
 
 NUM_CLASSES = 6
 
@@ -46,11 +46,19 @@ class WasteClassifier():
             early_stop = EarlyStopping(monitor='val_loss', patience=5)
             callbacks = [checkpoint, early_stop]
 
-            logger = TensorBoardLogger(
+            tb_logger = TensorBoardLogger(
                 save_dir=config['log_dir'],
                 name=config['exp_name'],
                 version=config['version']
             )
+            
+            csv_logger = CSVLogger(
+                save_dir=config['metrics_dir'],
+                name=config['exp_name'],
+                version=config['version']
+            )
+            
+            logger = [tb_logger, csv_logger]
 
             self.trainer = Trainer(
                 max_epochs=config['epochs'],

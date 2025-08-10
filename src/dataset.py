@@ -43,7 +43,6 @@ class WasteDatasetModule(LightningDataModule):
         self.train_transform = transform
         self.val_transform = transform
         self.test_transform = transform
-        
     
     def setup(self, stage):
         if stage == 'fit':
