@@ -32,7 +32,7 @@ class WasteClassifierModule(LightningModule):
             MulticlassAccuracy(num_classes), MulticlassPrecision(num_classes, average='weighted'), 
             MulticlassRecall(num_classes, average='weighted'), MulticlassF1Score(num_classes, average='weighted')
         ])
-        
+        self.train_metrics = metrics.clone(prefix='train_')
         self.valid_metrics = metrics.clone(prefix='val_')
         self.test_metrics = metrics.clone(prefix='test_')
         
