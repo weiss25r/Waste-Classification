@@ -1,5 +1,6 @@
 import torch
 import torchvision
+
 from torchvision.models import mobilenet_v3_small, mobilenet_v3_large
 from lightning import LightningModule
 from torch import nn
@@ -7,6 +8,7 @@ from torch import nn
 from torchmetrics import MetricCollection
 from torchmetrics.classification import MulticlassAccuracy, MulticlassPrecision, MulticlassRecall, MulticlassF1Score, PrecisionRecallCurve, ConfusionMatrix
 from lightning.pytorch.loggers import TensorBoardLogger
+
 
 class WasteClassifierModule(LightningModule):
     
@@ -43,7 +45,6 @@ class WasteClassifierModule(LightningModule):
 
     def forward(self, x):
         return self.model(x)
-    
     
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -115,7 +116,6 @@ class WasteClassifierModule(LightningModule):
         self.confusion_matrix.reset()
         
     def predict_step(self, batch, batch_idx):
-        #TODO: change 
         x, y = batch
         logits = self(x)
         preds = torch.argmax(logits, dim=1)

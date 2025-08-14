@@ -10,7 +10,7 @@ from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
 
 NUM_CLASSES = 6
 
-class WasteClassifier():
+class WasteClassifierTrainer():
     def __init__(self, config_file: Path | str):
         try:
             with open(config_file, 'r') as f:
@@ -19,8 +19,7 @@ class WasteClassifier():
             self.model = WasteClassifierModule(config['lr'], config['model_size'], NUM_CLASSES)
             
             train_transform = transforms.Compose([
-                pad_to_square, 
-                transforms.Resize((224, 224)),
+                transforms.RandomResizedCrop(224, scale=(0.5, 1.0), ratio=(0.75, 1.33)),
                 transforms.RandomHorizontalFlip(p = config['horizontal_flip']),
                 transforms.RandomVerticalFlip(p = config['vertical_flip']),
                 transforms.RandomRotation(degrees=config['rotation']),
@@ -29,22 +28,18 @@ class WasteClassifier():
                 transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
             ])
             
-            val_test_transform = transforms.Compose([
-                pad_to_square, 
-                transforms.Resize((224, 224)),
+            self.eval_transform = transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
             ])
             
-            self.data_module.setup(stage='fit')
-            self.data_module.setup(stage='test')
-            self.data_module.setup(stage='predict')
-            
-            self.data_module = WasteDatasetModule(config['dataset_path'], config['batch_size'], config['num_workers'], train_transform, val_test_transform)
+            self.data_module = WasteDatasetModule(config['dataset_path'], config['batch_size'], config['num_workers'], train_transform, self.eval_transform)
             
             checkpoint = ModelCheckpoint(
-                monitor='val_loss',
-                mode='min',
+                monitor='val_MulticlassF1Score',
+                mode='max',
                 save_last=True,
                 save_top_k=1,
                 dirpath=config['checkpoint_dir'],
@@ -54,7 +49,7 @@ class WasteClassifier():
             
             checkpoint.CHECKPOINT_NAME_LAST = config['checkpoint_name'] + '_last'
             
-            early_stop = EarlyStopping(monitor='val_loss', patience=5)
+            early_stop = EarlyStopping(monitor='val_loss', patience=config['patience'])
             callbacks = [checkpoint, early_stop]
 
             tb_logger = TensorBoardLogger(
@@ -93,5 +88,19 @@ class WasteClassifier():
     def load_model(self, checkpoint_path: str):
         self.model = WasteClassifierModule.load_from_checkpoint(checkpoint_path)
     
-    def predict(self):
-        pass
+    def predict_on_image(self, image_path: str):
+        img = Image.open(image_path).convert("RGB")
+        
+        img_ready = self.eval_transform(img)
+        img_batch = img_ready.unsqueeze(0)
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            logits = self.model(img_batch)
+            pred_idx = torch.argmax(logits, dim=1).item()
+            
+        class_name = ['glass', 'paper', 'cardboard', 'plastic', 'metal', 'trash']
+        predicted_class = class_name[pred_idx]
+        
+        return predicted_class

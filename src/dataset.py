@@ -8,8 +8,6 @@ from torchvision import transforms
 from lightning import LightningDataModule
 from torch.utils.data import DataLoader, random_split
 
-from utils import pad_to_square
-
 class WasteDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None):
         self.img_labels = pd.read_csv(annotations_file, sep=' ', header=None)
