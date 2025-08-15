@@ -9,9 +9,7 @@ from torchmetrics import MetricCollection
 from torchmetrics.classification import MulticlassAccuracy, MulticlassPrecision, MulticlassRecall, MulticlassF1Score, PrecisionRecallCurve, ConfusionMatrix
 from lightning.pytorch.loggers import TensorBoardLogger
 
-
 class WasteClassifierModule(LightningModule):
-    
     def __init__(self, lr=0.001, model_size: str = 'large', num_classes=6):
         super().__init__()
         self.num_classes = num_classes
