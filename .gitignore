@@ -1,3 +1,7 @@
 *.jpg
 /data
 /papers
+/training/logs
+/wastenet/__pycache__
+/app/__pycache__
+/.vscode

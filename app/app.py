@@ -4,7 +4,7 @@ from wastenet.inference import InferenceSession
 
 import io
 
-model = InferenceSession("./models/model.onnx")
+model = InferenceSession("./models/model_small.onnx")
 
 app = FastAPI()
 
