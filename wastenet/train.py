@@ -22,17 +22,17 @@ class WasteClassifierTrainer():
                 transforms.RandomResizedCrop(224, scale=(0.5, 1.0), ratio=(0.75, 1.33)),
                 transforms.RandomHorizontalFlip(p = self.config['horizontal_flip']),
                 transforms.RandomVerticalFlip(p = self.config['vertical_flip']),
-                transforms.RandomRotation(degrees=self.config['rotation'], fill = (142, 138, 132)), #int(255*mean),
+                transforms.RandomRotation(degrees=self.config['rotation'], fill = [174, 168, 159]), #int(255*mean),
                 transforms.ColorJitter(brightness=self.config['brightness'], contrast=self.config['contrast'], saturation=self.config['saturation'], hue=self.config['hue']),
                 transforms.ToTensor(),
-                transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
+                transforms.Normalize([0.6841, 0.6589, 0.6239], [0.1806, 0.1768, 0.1862])
             ])
             
             self.eval_transform = transforms.Compose([
                 transforms.Resize(256),
                 transforms.CenterCrop(224),
                 transforms.ToTensor(),
-                transforms.Normalize([0.5581, 0.5410, 0.5185], [0.3177, 0.3070, 0.3034])
+                transforms.Normalize([0.6841, 0.6589, 0.6239], [0.1806, 0.1768, 0.1862])
             ])
             
             self.data_module = WasteDatasetModule(self.config['dataset_path'], self.config['batch_size'], self.config['num_workers'], train_transform, self.eval_transform)
