@@ -5,3 +5,7 @@
 /wastenet/__pycache__
 /app/__pycache__
 /.vscode
+/training/metrics/no_resize_256
+/training/metrics/stf_wrong
+/training/checkpoints/std_wrong
+/training/checkpoints/no_resize256

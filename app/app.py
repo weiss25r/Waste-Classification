@@ -11,10 +11,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permette a tutte le origini
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Permette tutti i metodi (POST, GET, etc.)
-    allow_headers=["*"],  # Permette tutti gli header
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.post("/predict/")
