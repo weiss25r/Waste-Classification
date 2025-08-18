@@ -28,6 +28,7 @@ Waste classification could be performed by low-powered devices: Consider, for ex
 - FastAPI
 
 ## Project Structure
+```
 Waste Classification
  ┣ 📂models
  ┃ ┣ 📜model_large.onnx
@@ -103,7 +104,7 @@ Waste Classification
  ┣ 📜.gitignore
  ┣ 📜README.md
  ┣ 📜requirements.txt
-
+```
 ## Data
 Data collection includes downloading and merging two datasets from Kaggle. For each class, at least 800 examples were collecting. The datasets used are the following:
 - [TrashNet dataset with annotations](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification?select=Garbage+classification)
