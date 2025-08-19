@@ -150,4 +150,6 @@ A FastAPI server for inference was made with endpoint ```/predict```. primary de
 ## Waste Scanner
 Part of the project is the [WasteScanner]() app, a front-end for the API. It is a cross platform that allows users to upload an image for prediction. The app was built with React-Native and thus can run in Web, Android and iOS.
 
+| |  |
+|------------|------------|
 |<img src="./docs/screen_app_1.jpg" width="450"/> | <img src="./docs/screen_app_2.jpg" width="450"/> |
