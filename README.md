@@ -103,12 +103,13 @@ flowchart LR
     export_onnx --> API["🌐 Inference API"]
 ``` 
 Details of each step are provided below.
+
 ## Data Collection
 Data collection involves downloading two datasets from Kaggle, performing class selection and merging. Each class includes at least 830 examples. The datasets used are the following:
 - [TrashNet dataset with annotations](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification?select=Garbage+classification)
 - [Garbage Classification](www.kaggle.com/datasets/mostafaabla/garbage-classification)
 
-To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5. After data collection, means and standard deviations per channel are computed as described in notebook ```mean_std.ipynb```
+To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5. After data collection, means and standard deviations per channel are computed as described in notebook ```mean_std.ipynb```. Details about classed distribution can be found in notebook ```dataset_details.ipynb```
 
 ## Training
 Pytorch Lightning was used for training the network. The directory ```wastenet/``` contains the following files related to training:
@@ -149,4 +150,4 @@ A FastAPI server for inference was made with endpoint ```/predict```. primary de
 ## Waste Scanner
 Part of the project is the [WasteScanner]() app, a front-end for the API. It is a cross platform that allows users to upload an image for prediction. The app was built with React-Native and thus can run in Web, Android and iOS.
 
-![screen_app](docs/screen_app.jpg)
+|<img src="./docs/screen_app_1.jpg" width="450"/> | <img src="./docs/screen_app_2.jpg" width="450"/> |
