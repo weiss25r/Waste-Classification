@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict(file: UploadFile):
     contents = await file.read()
     img = Image.open(io.BytesIO(contents)).convert("RGB")
