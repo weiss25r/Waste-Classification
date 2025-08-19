@@ -1,7 +1,7 @@
 # Waste Classification
 
 ## Description
-The project consists in a full pipeline, from data collection to deployement, with output a deep learning model capable of classifying waste in one of six categories:
+This project implements a full pipeline - from data collection to deployment -resulting in a  deep learning model capable of classifying waste in one of six categories:
 - plastic
 - glass
 - metal
@@ -9,23 +9,24 @@ The project consists in a full pipeline, from data collection to deployement, wi
 - cardboard
 - trash
 
-Waste classification could be performed by low-powered devices: consider, for example, a smart trash bin that scans waste and sorts it into the correct containers based on its classification. Such a system could be equipped with an embedded device with low computing power. Considering similiar cases, the MobileNet architecture was chosen, as it is small and properly designed to run on mobile and embedded systems, making it a right choice. MobileNetV3 was fine-tuned on a waste dataset with good result.
+Waste classification could be performed by low-powered devices, such as a smart trash bin that scans waste and sorts it into the correct containers based on its classification. Considering similar cases, the MobileNetV3 architecture was chosen, as it is small and properly designed to run on mobile and embedded systems, making it a suitable choice for embedded applications. MobileNetV3 was fine-tuned on a dataset of waste images with good results in both the "small" and "large" versions.
 
-## Tech stack
+# Tech Stack
 
-**Data collection:**
-- Kaggle API
-- Pandas
+### 📊 Data Collection
+- [Kaggle API](https://www.kaggle.com/docs/api)  
+- [Pandas](https://pandas.pydata.org/)
 
-**Training**:
-- Pytorch Lightning
+### 🧠 Training
+- [PyTorch Lightning](https://www.pytorchlightning.ai/)
 
-**Logging**:
-- Tensorboard
+### 📈 Logging & Monitoring
+- [TensorBoard](https://www.tensorflow.org/tensorboard)
 
-**Inference**
-- ONNX
-- FastAPI
+### ⚡ Inference & Deployment
+- [ONNX](https://onnx.ai/)  
+- [FastAPI](https://fastapi.tiangolo.com/)
+
 
 ## Project Structure
 ```
@@ -53,25 +54,33 @@ Waste Classification
  ┃ ┣ 📜dataset.py
  ┃ ┣ 📜inference.py
  ┃ ┣ 📜model.py
- ┃ ┣ 📜tests.ipynb
- ┃ ┣ 📜test_metrics.ipynb
  ┃ ┣ 📜train.py
  ┃ ┗ 📜__init__.py
  ┣ 📜.gitignore
  ┣ 📜README.md
- ┣ 📜requirements.txt
+ ┣ 📜pipeline_requirements.txt
+ ┣ 📜inference_requirements.txt
 ```
 
 ```checkpoints/``` directory contains checkpoints for the best trained models, while ```metrics/``` contains metrics for each experiments.
 ## Project Requirements
 To replicate the entire pipeline, from data collection to export, install the required packages with:
 ```bash
-pip install -r training_requirements.txt
+pip install -r pipeline_requirements.txt
 ```
 otherwise, if you only want to use the models for inference, run:
 ```bash
 pip install -r inference_requirements.txt
 ```
+## Quickstart
+To run inference you can:
+- use notebook ```notebooks/inference_onnx.ipynb``` specifying image path;
+- run the API:
+
+    ```bash
+    fastapi run app/app.py
+    ```
+    and then POST images to endpoint /predict/, using the app [Waste Scanner]() or other tools like CURL.
 
 ## Workflow
 The flowchart below illustrates the pipeline.
@@ -87,38 +96,48 @@ flowchart LR
 
     Evaluation --> export_onnx["📦 Export to ONNX"]
     export_onnx --> API["🌐 Inference API"]
-
 ``` 
+Details of each step are provided below.
 ## Data Collection
-Data collection consists in downloading two datasets from Kaggle, performing class selection and merging. For each class, at least 800 examples were collecting. The datasets used are the following:
+Data collection involves downloading two datasets from Kaggle, performing class selection and merging. Each class includes at least 830 examples. The datasets used are the following:
 - [TrashNet dataset with annotations](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification?select=Garbage+classification)
 - [Garbage Classification](www.kaggle.com/datasets/mostafaabla/garbage-classification)
-To download and prepare data, the notebook ```prepare_dataset.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for train, validation e testing set are produced. The dataset is then saved in folder data/.
-## Experiments
-Experiments are described in detail in ```docs/report.pdf```. For each experiment, logging is performed via **Tensorboard**. Each experiments consinsts in a different configuration of hyperparameters and data augmentation . Losses, Accuracy, Precision, Recall, $F_1$ score and Precision-Recall curves are logged for each experiment.  Among the conducted experiments,  Metrics, checkpoints and configuration files conducted experiments are available in ```training/``` folder. **Tensorboard** was used for logging 
+
+To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5.
 
 ## Training
-Pytorch Lightning was used for training the network. The directory ```wastenet/``` and its files are related to training as described above:
+Pytorch Lightning was used for training the network. The directory ```wastenet/``` contains the following files related to training:
 
-- ```dataset.py```: contains implementation of a DataLoader and a DataModule for loading the dataset;
+- ```dataset.py```: implements a DataLoader and a DataModule for loading the dataset;
 
-- ```model.py```: contains implementation of a LightningModule, which contains all methods about training, testing and logging.
+- ```model.py```: implements a LightningModule defining training, testing, and logging routines.
 
-- ```train.py```: contains the WasteClassifierTrainer class, which is a wrapper for a Pytorch Lightning Trainer object . This class provides an interface for repating the training process, using different configurations of hyperparameters and data augmentation read from a YAML file.
-- ```inference.py```: contains the InferenceSession class, which is a wrapper for a ONNX inference session. This class makes the trained model ready to use, as it also handles required pre-processing of images before classification.
+- ```train.py```: contains the WasteClassifierTrainer class, which wraps a PyTorch Lightning Trainer to streamline repeated experiments with different configurations.
 
+## Experiments
+Each experiment consists in training the network with a different configuration of hyperparameters and data augmentation.  Each configuration corresponds to a YAML file, located in ```training/config/``` Losses, Accuracy, Precision, Recall, $F_1$ score and Precision-Recall curves are logged using **Tensorboard**. Among the conducted experiments, metrics, checkpoints and configuration files for conducted experiments are available in ```training/``` folder. 
+The output of the experiment loop is one model for the "small" architecture and one for the "large". Additional experiments can be conducted by adding new YAML configurations.
+The table below contains metrics computed on the test sets for the best models. 
 
+<center>
 
+| Metric | MobileNetV3 Small | MobileNetV3 Large |
+|:---|:---:|:---:|
+| Accuracy | 0.9434 | 0.9582 |
+| $F_1$ score | 0.9481 | 0.9579 |
+| Precision | 0.9483 | 0.9581 |
+| Recall | 0.9482 | 0.9580 |
+</center>
+
+More details about experiments can be found in ```docs/experiments.md```
 
 ## Inference API
 
 ### Model export
-Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is very fast using a **Raspberry Pi 4** (4 GB). 
+Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is fast using a **Raspberry Pi 4** (4 GB), which is capable of running the "large" version of the model. The export script can be found in ```export_model.ipynb```
 
-### Inference Session
-Inference is served by the InferenceSession class, that loads a MobileNet exported in ONNX to run inference on Images. This class can be used directly with the notebook inference_onnx.ipynb or with the FastAPI server The API was tested on a **Raspberry Pi 4** (4 GB), which is capable of running the "large" version of the trained model.
 ### FastAPI
-A FastAPI server for inference was made with endopoint ```/predict```. To run the API run the following command in the project directory:
+A FastAPI server for inference was made with endpoint ```/predict```. To run the API run the following command in the project directory:
 
 ```bash
 fastapi run app/app.py
@@ -128,4 +147,5 @@ You can then POST images for inference.
 An example of inference without using FastAPI is the notebook ```inference_example.ipynb```
 
 ## Cross-platform app
-Part of the project is the [WasteScanner]() app, a front-end for the API. It consists in a simple cross platform that lets users pick an image for prediction. The app was built with React-Native and thus can ran in Web, Android and iOS.
+Part of the project is the [WasteScanner]() app, a front-end for the API. It is a cross platform that allows users to upload an image for prediction. The app was built with React-Native and thus can run in Web, Android and iOS.
+![screen_app](docs/screen_app.jpg)
