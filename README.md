@@ -31,6 +31,11 @@ Waste classification could be performed by low-powered devices, such as a smart 
 ## Project Structure
 ```
 Waste Classification
+ ┣ 📂app
+ ┃ ┣ 📜app.py
+ ┣ 📂docs
+ ┃ ┣ 📜experiments.md
+ ┃ ┣ 📜screen_app.jpg
  ┣ 📂models
  ┃ ┣ 📜model_large.onnx
  ┃ ┗ 📜model_small.onnx
