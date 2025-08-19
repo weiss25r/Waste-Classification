@@ -74,13 +74,13 @@ pip install -r inference_requirements.txt
 ```
 ## Quickstart
 To run inference you can:
-- use notebook ```notebooks/inference_onnx.ipynb``` specifying image path;
-- run the API:
+- use notebook ```inference_onnx.ipynb``` specifying image path;
+- start the API:
 
     ```bash
     fastapi run app/app.py
     ```
-    and then POST images to endpoint /predict/, using the app [Waste Scanner]() or other tools like CURL.
+    and then POST images to endpoint ```/predict``` using the app [Waste Scanner]() or tools like curl.
 
 ## Workflow
 The flowchart below illustrates the pipeline.
@@ -103,7 +103,7 @@ Data collection involves downloading two datasets from Kaggle, performing class 
 - [TrashNet dataset with annotations](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification?select=Garbage+classification)
 - [Garbage Classification](www.kaggle.com/datasets/mostafaabla/garbage-classification)
 
-To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5.
+To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5. After data collection, means and standard deviations per channel are computed as described in notebook ```mean_std.ipynb```
 
 ## Training
 Pytorch Lightning was used for training the network. The directory ```wastenet/``` contains the following files related to training:
@@ -119,7 +119,7 @@ Each experiment consists in training the network with a different configuration 
 The output of the experiment loop is one model for the "small" architecture and one for the "large". Additional experiments can be conducted by adding new YAML configurations.
 The table below contains metrics computed on the test sets for the best models. 
 
-<center>
+<p align = "center">
 
 | Metric | MobileNetV3 Small | MobileNetV3 Large |
 |:---|:---:|:---:|
@@ -127,25 +127,21 @@ The table below contains metrics computed on the test sets for the best models.
 | $F_1$ score | 0.9481 | 0.9579 |
 | Precision | 0.9483 | 0.9581 |
 | Recall | 0.9482 | 0.9580 |
-</center>
+
+</p>
 
 More details about experiments can be found in ```docs/experiments.md```
 
 ## Inference API
 
 ### Model export
-Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is fast using a **Raspberry Pi 4** (4 GB), which is capable of running the "large" version of the model. The export script can be found in ```export_model.ipynb```
+Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is fast using a **Raspberry Pi 4** (4 GB),  which is capable of running the "large" version of the model. The export script can be found in ```export_model.ipynb```
 
+### Inference Session
+Inference is served by the InferenceSession class, that loads a MobileNet exported in ONNX to run inference on Images, also handling required pre-processing. The class is implemented in  ```wastenet/inference.py```.
 ### FastAPI
-A FastAPI server for inference was made with endpoint ```/predict```. To run the API run the following command in the project directory:
-
-```bash
-fastapi run app/app.py
-```
-You can then POST images for inference.
-### Notebook
-An example of inference without using FastAPI is the notebook ```inference_example.ipynb```
-
-## Cross-platform app
+A FastAPI server for inference was made with endpoint ```/predict```. primary device for testing the API was a **Raspberry PI 4**. To start the API refer to [Quickstart](#quickstart)
+## Waste Scanner
 Part of the project is the [WasteScanner]() app, a front-end for the API. It is a cross platform that allows users to upload an image for prediction. The app was built with React-Native and thus can run in Web, Android and iOS.
+
 ![screen_app](docs/screen_app.jpg)
