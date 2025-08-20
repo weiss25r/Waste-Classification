@@ -136,7 +136,7 @@ The table below contains metrics computed on the test sets for the best models.
 
 </p>
 
-**Full details about experiments can be found in the [experiments report](docs/experiments.md)
+**Full details about experiments can be found in the [experiments report](docs/experiments/experiments.md)
 
 ## Inference API
 

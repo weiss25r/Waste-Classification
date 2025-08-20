@@ -99,9 +99,9 @@ The training took 57 to 59 seconds for each epoch, with early stopping reached a
 The two checkpoints are almost similar, with the "last" having a slightly better accuracy.
 Losses, Confusion Matrix and Precision-Recall Curves for this model are shown below.
 
-| ![loss](experiments/exp_one/loss.png) | ![cm](experiments/exp_one/cm.png) |  
+| ![loss](exp_one/loss.png) | ![cm](exp_one/cm.png) |  
 |---------------------------|---------------------------|
-| ![pr_all](experiments/exp_one/pr_curve_all.png) | ![pr_micro](experiments/exp_one/pr_curve_micro.png)
+| ![pr_all](exp_one/pr_curve_all.png) | ![pr_micro](exp_one/pr_curve_micro.png)
 
 Looking at precision-recall curves, the overall performance is good. However, there are issues with class **paper**. The confusion matrix tells that the primary source of confusion for this class are **cardboard** images, which is clear considering the domain of the problem. **The model struggles to mantain a high precision for class "paper"**. This is reflected in the micro-averaged PR curve. The problem may also be related to heterogeneity of the class. Class "**cardboard**" also has a similar issue, but much lesser problematic.
 ## Experiment 2
@@ -122,9 +122,9 @@ Early stopping happened at epoch 20 and checkpointing at epoch 16. The following
 
 The "best" checkpoint has better metrics than the "last", apart from accuracy, thus below are related to the first one.
 
-| ![loss](experiments/exp_two/loss.png) | ![cm](experiments/exp_two/cm.png) |  
+| ![loss](exp_two/loss.png) | ![cm](exp_two/cm.png) |  
 |---------------------------|---------------------------|
-| ![pr_all](experiments/exp_two/pr_curve_all.png) | ![pr_micro](experiments/exp_two/pr_curve_micro.png)
+| ![pr_all](exp_two/pr_curve_all.png) | ![pr_micro](exp_two/pr_curve_micro.png)
 
 **The overall performance is slightly worse than the previous experiment, but PR curve for class "paper" is better**. Also the PR curve of "**cardboard**" class has been improved. In fact, looking at the confusion matrix, there are minor improvements for class **"cardboard"** and one more correct prediction for class **"paper"**. Only two classes out of six have been improved and the rest, on the contrary, worsened. Thus it is not safe to use vertical flipping as a data augmentation technique for waste classification.
 
@@ -142,9 +142,9 @@ Early stopping and checkpointing happened at the same epoch, which is the 18. Th
 | Precision | 0.9340 | 
 | Recall | 0.9335 | 
 
-| ![loss](experiments/exp_three/loss.png) | ![cm](experiments/exp_three/cm.png) |  
+| ![loss](exp_three/loss.png) | ![cm](exp_three/cm.png) |  
 |---------------------------|---------------------------|
-| ![pr_all](experiments/exp_three/pr_curve_all.png) | ![pr_micro](experiments/exp_three/pr_curve_micro.png)
+| ![pr_all](exp_three/pr_curve_all.png) | ![pr_micro](exp_three/pr_curve_micro.png)
 
 "**Cardboard"** class has a better PR curve than previous experiments. While not disappeared, the PR curve for "**paper**" class has improved. However, looking at the metrics and the confusion matrix, general performance is even worse than using vertical flipping. While helping to solve class "**paper**" issues, the overall performance worsens, thus the configuration used in Experiment 1 is still the best one.
 
@@ -168,9 +168,9 @@ The training took from 2:30 to 2:40 minutes per epoch. Early stopped happened at
 
 The "best" checkpoint wins.
 
-| ![loss](experiments/exp_four/loss.png) | ![cm](experiments/exp_four/cm.png) |  
+| ![loss](exp_four/loss.png) | ![cm](exp_four/cm.png) |  
 |---------------------------|---------------------------|
-| ![pr_all](experiments/exp_four/pr_curve_all.png) | ![pr_micro](experiments/exp_four/pr_curve_micro.png)
+| ![pr_all](exp_four/pr_curve_all.png) | ![pr_micro](exp_four/pr_curve_micro.png)
 
 All PR curvers are now similar: **using the large architecture, the model does not struggle to mantain high precision for all classes**. Thus, this is the best trained model so far and is the one ready to be deployed. 
 
