@@ -107,7 +107,7 @@ Details of each step are provided below.
 ## Data Collection
 Data collection involves downloading two datasets from Kaggle, performing class selection and merging. Each class includes at least 830 examples. The datasets used are the following:
 - [TrashNet dataset with annotations](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification?select=Garbage+classification)
-- [Garbage Classification](www.kaggle.com/datasets/mostafaabla/garbage-classification)
+- [Garbage Classification](https://www.kaggle.com/datasets/mostafaabla/garbage-classification)
 
 To download and prepare data, notebook ```data_collection.ipynb``` is used. Using Kaggle API, Pandas and other system libraries, the two dataset are downloaded, classes of interest from the second dataset are selected, the two datasets are merged and annotations for training, validation and testing sets are produced. The dataset is then saved in folder ```data/```. Annotations are in CSV format with columns "filename" and "class". Classes are indexed from 0 to 5. After data collection, means and standard deviations of the train set are computed as shown in notebook ```mean_std.ipynb```. Details about classed distribution can be found in notebook ```dataset_details.ipynb```
 
