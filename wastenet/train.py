@@ -72,23 +72,6 @@ class WasteClassifierTrainer():
 
     def load_model(self, checkpoint_path: str):
         self.model = WasteClassifierModule.load_from_checkpoint(checkpoint_path)
-
-    def predict_on_image(self, image_path: str):
-        img = Image.open(image_path).convert("RGB")
-        
-        img_ready = self.eval_transform(img)
-        img_batch = img_ready.unsqueeze(0)
-        
-        self.model.eval()
-        
-        with torch.no_grad():
-            logits = self.model(img_batch)
-            pred_idx = torch.argmax(logits, dim=1).item()
-            
-        class_name = ['glass', 'paper', 'cardboard', 'plastic', 'metal', 'trash']
-        predicted_class = class_name[pred_idx]
-        
-        return predicted_class
     
     def __configure_trainer(self, callbacks=None, log_suffix="", version:int = None):
         logger = [

@@ -65,7 +65,7 @@ class WasteClassifierModule(LightningModule):
         self.log('val_loss', loss, on_epoch=True, on_step=False, prog_bar=True)
         
         preds = torch.argmax(logits, dim=1)
-        self.valid_metrics.update(logits, y)
+        self.valid_metrics.update(preds, y)
         
     def on_validation_epoch_end(self):
         self.log_dict(self.valid_metrics.compute())
