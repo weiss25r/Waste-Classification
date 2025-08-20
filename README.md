@@ -1,7 +1,7 @@
 # Waste Classification
 
 ## Description
-This project implements a full pipeline - from data collection to deployment -resulting in a  deep learning model capable of classifying waste in one of six categories:
+This project implements a full pipeline - from data collection to deployment - resulting in a  deep learning model capable of classifying waste in one of six categories:
 - plastic
 - glass
 - metal
