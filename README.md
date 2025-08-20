@@ -33,6 +33,7 @@ Waste Classification
  ┣ 📂app
  ┃ ┣ 📜app.py
  ┣ 📂docs
+ ┃ ┣ 📂experiments
  ┃ ┣ 📜experiments.md
  ┃ ┣ 📜screen_app.jpg
  ┣ 📂models
@@ -128,14 +129,14 @@ The table below contains metrics computed on the test sets for the best models.
 
 | Metric | MobileNetV3 Small | MobileNetV3 Large |
 |:---|:---:|:---:|
-| Accuracy | 0.9434 | 0.9582 |
-| $F_1$ score | 0.9481 | 0.9579 |
-| Precision | 0.9483 | 0.9581 |
-| Recall | 0.9482 | 0.9580 |
+| Accuracy | 0.9358 | 0.9548 |
+| $F_1$ score | 0.9404 | 0.9559 |
+| Precision | 0.9408 | 0.9561 |
+| Recall | 0.9405 | 0.9559 |
 
 </p>
 
-More details about experiments can be found in ```docs/experiments.md```
+**Full details about experiments can be found in the [experiments report](docs/experiments.md)
 
 ## Inference API
 

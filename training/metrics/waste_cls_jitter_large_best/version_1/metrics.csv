@@ -1,0 +1,2 @@
+epoch,step,test_MulticlassAccuracy,test_MulticlassF1Score,test_MulticlassPrecision,test_MulticlassRecall,test_loss
+0,0,0.9548237323760986,0.9559015035629272,0.9561771154403687,0.955913245677948,0.1598508358001709
