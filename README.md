@@ -9,8 +9,7 @@ This project implements a full pipeline - from data collection to deployment - r
 - cardboard
 - trash
 
-Waste classification could be performed by low-powered devices, such as a smart trash bin that scans waste and sorts it into the correct containers based on its classification. Considering similar cases, the MobileNetV3 architecture was chosen, as it is small and properly designed to run on mobile and embedded systems, making it a suitable choice for embedded applications. MobileNetV3 was fine-tuned on a dataset of waste images with good results in both the "small" and "large" versions.
-
+Waste classification could be performed by low-powered devices, such as a smart trash bin that scans waste and sorts it into the correct containers based on its classification. Considering similar cases, the MobileNetV3 architecture was chosen, as it is small and properly designed to run on mobile and embedded systems, making it a suitable choice for embedded applications. MobileNetV3 was fine-tuned on a dataset of waste images with good results in both the "small" and "large" versions. The best trained model is served with an API built with FastAPI. A cross-platform app for the API, [WasteScanner](), was built as part of the project.
 # Tech Stack
 
 ### 📊 Data Collection
@@ -141,12 +140,12 @@ More details about experiments can be found in ```docs/experiments.md```
 ## Inference API
 
 ### Model export
-Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is fast using a **Raspberry Pi 4** (4 GB),  which is capable of running the "large" version of the model. The export script can be found in ```export_model.ipynb```
+Starting from a checkpoint, the model can be exported to [ONNX](https://onnx.ai/) format. This makes the model capable of running outside the training environment, using the ONNX runtime. Furthermore, using ONNX the model can be optimized to run even faster on embedded and mobile devices. Using this format, inference is fast using a **Raspberry Pi 4** (4 GB),  which is capable of running the "large" version of the model. The export script can be found in ```export_model.ipynb``` while two exported models can be found in folder ```models/model_large.onnx```, which contains one for the "small" architecture and one for the "large".
 
 ### Inference Session
 Inference is served by the InferenceSession class, that loads a MobileNet exported in ONNX to run inference on Images, also handling required pre-processing. The class is implemented in  ```wastenet/inference.py```.
 ### FastAPI
-A FastAPI server for inference was made with endpoint ```/predict```. primary device for testing the API was a **Raspberry PI 4**. To start the API refer to [Quickstart](#quickstart)
+A FastAPI server for inference was made with endpoint ```/predict```. The primary device for testing the API was a **Raspberry PI 4**. When starting, the best produced model is loaded by default, which is located in ```models/model_large.onnx```. To start the API refer to [Quickstart](#quickstart)
 ## Waste Scanner
 Part of the project is the [WasteScanner]() app, a front-end for the API. It is a cross platform that allows users to upload an image for prediction. The app was built with React-Native and thus can run in Web, Android and iOS.
 
