@@ -25,6 +25,7 @@ Waste classification could be performed by low-powered devices, such as a smart 
 ### ⚡ Inference & Deployment
 - [ONNX](https://onnx.ai/)  
 - [FastAPI](https://fastapi.tiangolo.com/)
+- [Docker](https://www.docker.com/)
 
 
 ## Project Structure
@@ -62,6 +63,7 @@ Waste Classification
  ┃ ┣ 📜train.py
  ┃ ┗ 📜__init__.py
  ┣ 📜.gitignore
+ ┣ 📜Dockerfile
  ┣ 📜README.md
  ┣ 📜pipeline_requirements.txt
  ┣ 📜inference_requirements.txt
@@ -80,13 +82,19 @@ pip install -r inference_requirements.txt
 ## Quickstart
 To run inference you can:
 - use notebook ```inference_onnx.ipynb``` specifying image path;
-- start the API:
+- start the API directly:
 
     ```bash
     fastapi run app/app.py
     ```
-    and then POST images to endpoint ```/predict``` using the app [Waste Scanner]() or tools like curl.
-
+    and then POST images to endpoint ```/predict``` using the app [Waste Scanner]() or tools like curl. Default options will use port 8000;
+- use a Docker container:
+    ```bash
+    docker build -t waste_cls_api .
+    docker run  -p <YOUR_PORT>:8000 waste_cls_api
+    ```
+    Then access the `/predict` endpoint as usual.
+    
 ## Workflow
 The flowchart below illustrates the pipeline.
 ```mermaid 
