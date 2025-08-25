@@ -92,7 +92,7 @@ To run inference you can:
 - use a Docker container:
     ```bash
     docker build -t waste_cls_api .
-    docker run  -p <YOUR_PORT>:8000 waste_cls_api
+    docker run -p <YOUR_PORT>:8000 waste_cls_api
     ```
     Then access the `/predict` endpoint as usual.
     
