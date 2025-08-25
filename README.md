@@ -64,9 +64,10 @@ Waste Classification
  ┃ ┗ 📜__init__.py
  ┣ 📜.gitignore
  ┣ 📜Dockerfile
+ ┣ 📜LICENSE
  ┣ 📜README.md
- ┣ 📜pipeline_requirements.txt
- ┣ 📜inference_requirements.txt
+ ┣ 📜server_requirements.txt
+ ┣ 📜training_requirements.txt
 ```
 
 ```checkpoints/``` directory contains checkpoints for the best trained models, while ```metrics/``` contains metrics for each experiments.
